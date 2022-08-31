@@ -1,8 +1,10 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import PokemonCard from "./PokemonCard.jsx";
 
+// Funcion de scroll al usar la paginacion
 const scrollToTop = () => {
   const container = document.querySelector(".pokedex__container");
   container.scrollTo({
@@ -14,16 +16,46 @@ const scrollToTop = () => {
 const Pokedex = () => {
   const [pokemons, setPokemons] = useState();
   const [pagination, setPagination] = useState(1);
+  const [pokemonSearch, setPokemonSearch] = useState();
+  const [optionPokemon, setOptionPokemon] = useState("ALL");
+  const [pokemonList, setpokemonList] = useState();
   const trainerName = useSelector((state) => state.trainerName);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const URL = "https://pokeapi.co/api/v2/pokemon";
+    listPokemons();
+    if (optionPokemon !== "ALL") {
+      const URL = `https://pokeapi.co/api/v2/type/${optionPokemon}/`;
+      axios.get(URL)
+        .then((res) => {
+          const arrTemp = res.data.pokemon.map((e) => e.pokemon);
+          setPokemons({ results: arrTemp });
+        })
+        .catch((err) => console.log(err));
+    } else if (pokemonSearch) {
+      const url = `https://pokeapi.co/api/v2/pokemon/${pokemonSearch}`;
+      const objTemp = {
+        results: [{ url }],
+      };
+      setPokemons(objTemp);
+    } else {
+      const URL = "https://pokeapi.co/api/v2/pokemon";
+      axios.get(URL)
+        .then((res) => setPokemons(res.data))
+        .catch((err) => console.log(err));
+    }
+  }, [pokemonSearch, optionPokemon]);
+
+  // Funcion para obtener los tipos de pokemon y listarlos en el select
+  const listPokemons = () => {
+    const URL = "https://pokeapi.co/api/v2/type";
     axios
       .get(URL)
-      .then((res) => setPokemons(res.data))
+      .then((res) => setpokemonList(res.data.results))
       .catch((err) => console.log(err));
-  }, []);
+  };
 
+  // Funcion de retroceder de pagina
   const paginationNext = () => {
     const URLNext = pokemons?.next;
     if (URLNext !== null) {
@@ -38,6 +70,7 @@ const Pokedex = () => {
     }
   };
 
+  // Funcion de avanzar de pagina
   const paginationPrevious = () => {
     const URLPrevious = pokemons?.previous;
     if (URLPrevious !== null) {
@@ -52,8 +85,23 @@ const Pokedex = () => {
     }
   };
 
+  // Funcion de input
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setPokemonSearch(e.target.inputSearch.value.trim().toLowerCase());
+    e.target.inputSearch.value = "";
+    setOptionPokemon('ALL');
+  };
+
+  // Funcion de select
+  const handleChangeSelect = (e) => {
+    setOptionPokemon(e.target.value);
+    setPokemonSearch('');
+  };
+
   return (
     <section className="pokedex">
+      <button className="pokedex__btn_login" onClick={() => navigate('/')}><i className="fa-solid fa-arrow-left"></i>Return to login</button>
       <div className="pokedex__logo">
         <img
           src="https://i.postimg.cc/xdnhfYwx/pokedex-title.png"
@@ -67,33 +115,26 @@ const Pokedex = () => {
       </h2>
       <article className="pokedex__filters">
         <div className="filters__input">
-          <input type="text" placeholder="search by pokemon name" />
-          <button>
-            <i className="fa-solid fa-magnifying-glass"></i>
-          </button>
+          <form onSubmit={handleSubmit}>
+            <input
+              type="text"
+              placeholder="search by pokemon name"
+              id="inputSearch"
+            />
+            <button>
+              <i className="fa-solid fa-magnifying-glass"></i>
+            </button>
+          </form>
         </div>
         <div className="filters__select">
           <p className="select__title">Select the type of pokemon:</p>
-          <select name="type" id="pokemon__type">
+          <select value={optionPokemon} onChange={handleChangeSelect}>
             <option value="all">All pokemons</option>
-            <option value="bug">Bug</option>
-            <option value="dark">Dark</option>
-            <option value="dragon">Dragon</option>
-            <option value="electric">Electric</option>
-            <option value="fairy">Fairy</option>
-            <option value="fighting">Fighting</option>
-            <option value="fire">Fire</option>
-            <option value="flying">Flying</option>
-            <option value="ghost">Ghost</option>
-            <option value="grass">Grass</option>
-            <option value="ground">Ground</option>
-            <option value="ice">Ice</option>
-            <option value="normal">Normal</option>
-            <option value="poison">Poison</option>
-            <option value="psychic">Psychic</option>
-            <option value="rock">Rock</option>
-            <option value="steel">Steel</option>
-            <option value="water">Water</option>
+            {pokemonList?.map((type) => (
+              <option key={type.name} value={type.name}>
+                {type.name}
+              </option>
+            ))}
           </select>
         </div>
         <div className="filters__pagination">

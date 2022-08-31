@@ -36,7 +36,7 @@ const LoginPokedex = () => {
             <h3 className="login__welcome">Welcome to Pokedex App</h3>
             <h4 className="login__select">Choose your trainer:</h4>
             <div className="login__select_trainer">
-              <label htmlFor="male">Allan</label>
+              <label htmlFor="male">Male</label>
               <input
                 type="radio"
                 name="trainer"
@@ -48,7 +48,7 @@ const LoginPokedex = () => {
                   )
                 }
               />
-              <label htmlFor="jessie">Jessie</label>
+              <label htmlFor="jessie">Female</label>
               <input
                 type="radio"
                 name="trainer"

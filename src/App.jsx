@@ -10,16 +10,22 @@ function App() {
   return (
     <div className="App">
       <header className="App__pokeball">
-        <img src="https://i.postimg.cc/QxzPDTD0/pokedex-pokeball.png" alt="pokeball" />
+        <img
+          src="https://i.postimg.cc/QxzPDTD0/pokedex-pokeball.png"
+          alt="pokeball"
+        />
       </header>
       <HashRouter>
         <Routes>
+
           <Route path="/" element={<LoginPokedex />} />
           <Route path="*" element={<NotFound />} />
+
           <Route element={<ProtectedRoutes />}>
             <Route path="/pokedex" element={<Pokedex />} />
-            <Route path="/pokedex:id" element={<PokemonDetails />} />
+            <Route path="/pokedex/:pokemonName" element={<PokemonDetails />} />
           </Route>
+
         </Routes>
       </HashRouter>
       <footer>
