@@ -638,7 +638,7 @@
 }
 
 /* MEDIAQUERIES */
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 550px) {
 
   * {
     margin: 0;
@@ -646,37 +646,49 @@
   }
 
   .App {
-
-  }
-
-  .App__pokeball {
-    width: 1rem;
-    top: 7rem;
-    left: -1rem;
-    right: 0rem;
-    bottom: 0;
     overflow: hidden;
   }
-
+  
+  .App__pokeball {
+    width: 15rem;
+    top: 6rem;
+    left: 3rem;
+    right: 0rem;
+    bottom: 0;
+  }
+  
   .footer {
-    display: none;
     left: 0;
     right: 0;
     bottom: 1rem;
   }
   
   .login {
-
+    overflow: hidden;
   }
   
   .login__logo {
-    width: 10rem;
+    width: 16rem;
+    height: min-content;
+    top: 2rem;
+    left: 4rem;
+    right: 0;
+    bottom: 0;
   }
 
   .login__card {
-    width: 1rem;
-    height: 1rem;
+    width: 80vw;
+    height: 12rem;
   }
+
+  .login__card::before {
+    top: 2rem;
+    left: 7rem;
+    right: 0;
+    bottom: 0;
+    background-size: 15rem;
+  }
+
 }
 
 
