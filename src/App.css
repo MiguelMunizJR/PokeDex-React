@@ -669,17 +669,17 @@
   }
   
   .login__logo {
-    width: 18rem;
+    width: 19rem;
     height: min-content;
     top: 3rem;
-    left: 3rem;
+    left: 2.3rem;
     right: 0;
     bottom: 1rem;
   }
 
   .login__card {
-    width: 80vw;
-    height: 40vh;
+    width: 20rem;
+    height: 18rem;
   }
 
   .login__card::before {
@@ -701,7 +701,7 @@
   }
 
   .login__name {
-    margin-top: 1rem;
+    margin-top: 1.5rem;
     margin-bottom: 1rem;
   }
 
