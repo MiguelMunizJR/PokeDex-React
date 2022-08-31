@@ -651,14 +651,15 @@
   
   .App__pokeball {
     width: 15rem;
-    top: 6rem;
+    height: min-content;
+    top: 8rem;
     left: 3rem;
     right: 0rem;
     bottom: 0;
   }
   
   .footer {
-    left: 0;
+    left: 2.5rem;
     right: 0;
     bottom: 1rem;
   }
@@ -670,7 +671,7 @@
   .login__logo {
     width: 16rem;
     height: min-content;
-    top: 2rem;
+    top: 3rem;
     left: 4rem;
     right: 0;
     bottom: 0;
@@ -678,15 +679,42 @@
 
   .login__card {
     width: 80vw;
-    height: 12rem;
+    height: 40vh;
   }
 
   .login__card::before {
-    top: 2rem;
-    left: 7rem;
+    top: 4rem;
+    left: 3rem;
     right: 0;
     bottom: 0;
-    background-size: 15rem;
+    background-size: 20rem;
+  }
+
+  .login__title {
+    margin-top: 1rem;
+    font-size: 2rem;
+  }
+
+  .login__welcome {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .login__name {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .trainer__img {
+    display: none;
+  }
+
+  .login__select {
+    display: none;
+  }
+
+  .login__select_trainer {
+    display: none;
   }
 
 }
