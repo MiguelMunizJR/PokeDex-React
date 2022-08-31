@@ -101,7 +101,7 @@ const Pokedex = () => {
 
   return (
     <section className="pokedex">
-      <button className="pokedex__btn_login" onClick={() => navigate('/')}><i className="fa-solid fa-arrow-left"></i>Return to login</button>
+      <button className="pokedex__btn_login" onClick={() => navigate('/')}><i className="fa-solid fa-arrow-left"></i></button>
       <div className="pokedex__logo">
         <img
           src="https://i.postimg.cc/xdnhfYwx/pokedex-title.png"
