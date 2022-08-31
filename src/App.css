@@ -105,7 +105,7 @@
 
 .notfound__btn {
   margin-top: 1.5rem;
-  padding: .5rem;
+  padding: 0.5rem;
   width: 7rem;
   height: 2.5rem;
   display: flex;
@@ -207,12 +207,12 @@
 }
 
 .login__select_trainer label {
-  margin-top: .5rem;
+  margin-top: 0.5rem;
   font-size: 1.2rem;
 }
 
 .login__select_trainer input {
-  margin-top: .5rem;
+  margin-top: 0.5rem;
   width: 1rem;
   cursor: pointer;
   z-index: 100;
@@ -303,7 +303,7 @@
 }
 
 .pokedex__btn_login {
-  padding: .5rem;
+  padding: 0.5rem;
   width: 10rem;
   height: 2.5rem;
   display: flex;
@@ -575,7 +575,7 @@
 
 .pokemon__list_types {
   display: flex;
-  gap: .5rem;
+  gap: 0.5rem;
   list-style: none;
 }
 
@@ -626,7 +626,6 @@
   align-items: center;
 }
 
-
 /* ANIMTAION/TRANSITIONS */
 @keyframes pokeball {
   0% {
@@ -639,7 +638,6 @@
 
 /* MEDIAQUERIES */
 @media screen and (max-width: 550px) {
-
   * {
     margin: 0;
     padding: 0;
@@ -648,7 +646,7 @@
   .App {
     overflow: hidden;
   }
-  
+
   .App__pokeball {
     width: 15rem;
     height: min-content;
@@ -657,22 +655,26 @@
     right: 0rem;
     bottom: 0;
   }
-  
+
   .footer {
+    display: none;
     left: 2.5rem;
     right: 0;
     bottom: 1rem;
   }
-  
+
   .login {
     overflow: hidden;
   }
-  
+
   .login__logo {
+    margin-left: auto;
+    margin-right: auto;
     width: 19rem;
     height: min-content;
-    top: 3rem;
-    left: 2.3rem;
+    position: relative;
+    top: -7rem;
+    left: 0;
     right: 0;
     bottom: 1rem;
   }
@@ -716,9 +718,7 @@
   .login__select_trainer {
     display: none;
   }
-
 }
-
 
 /* BGN Dynamic */
 .bgn-bug {
@@ -878,7 +878,6 @@
 .bdr-water {
   border-color: #006fff;
 }
-
 
 /* Scroll bar style */
 
