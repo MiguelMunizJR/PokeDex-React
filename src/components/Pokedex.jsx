@@ -91,11 +91,7 @@ const Pokedex = () => {
         .catch((err) => console.log(err));
     }
     if (optionPokemon !== "all") {
-      if (pokemonsPag.length !== 0) {
         setCurrentPage(currentPage + 1); //
-      } else {
-        alert("no hay mas pokemons");
-      }
     }
   };
 
