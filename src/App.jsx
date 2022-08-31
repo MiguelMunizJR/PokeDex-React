@@ -17,7 +17,6 @@ function App() {
       </header>
       <HashRouter>
         <Routes>
-
           <Route path="/" element={<LoginPokedex />} />
           <Route path="*" element={<NotFound />} />
 
@@ -25,12 +24,8 @@ function App() {
             <Route path="/pokedex" element={<Pokedex />} />
             <Route path="/pokedex/:pokemonName" element={<PokemonDetails />} />
           </Route>
-
         </Routes>
       </HashRouter>
-      <footer>
-        <h4 className="footer">Miguel Muñiz | Academlo</h4>
-      </footer>
     </div>
   );
 }

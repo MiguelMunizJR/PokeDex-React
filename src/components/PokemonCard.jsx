@@ -13,8 +13,8 @@ const PokemonCard = ({ url }) => {
       .catch((err) => console.log(err));
   }, []);
 
-  const handleClickPokemon = () => navigate(`/pokedex/${pokemon.name}`)
-  
+  const handleClickPokemon = () => navigate(`/pokedex/${pokemon.name}`);
+
   return (
     <article
       className={`pokemon__card bgn-${pokemon?.types[0].type.name}`}
@@ -30,9 +30,12 @@ const PokemonCard = ({ url }) => {
       <aside className={`pokemon__info bdr-${pokemon?.types[0].type.name}`}>
         <h3 className="pokemon__name">{pokemon?.name}</h3>
         <ul className="pokemon__list_types">
-          {pokemon?.types.map((slot) => (
-            <li className="pokemon__item_types" key={slot.type.url}>
-              {slot.type.name}
+          {pokemon?.types.map((type) => (
+            <li
+              className={`pokemon__item_types bgn-${type.type.name}`}
+              key={type.type.url}
+            >
+              {type.type.name}
             </li>
           ))}
         </ul>

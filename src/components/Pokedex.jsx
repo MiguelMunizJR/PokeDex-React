@@ -15,21 +15,38 @@ const scrollToTop = () => {
 
 const Pokedex = () => {
   const [pokemons, setPokemons] = useState();
+  const [pokemonsPagination, setPokemonsPagination] = useState();
   const [pagination, setPagination] = useState(1);
   const [pokemonSearch, setPokemonSearch] = useState();
-  const [optionPokemon, setOptionPokemon] = useState("ALL");
-  const [pokemonList, setpokemonList] = useState();
+  const [optionPokemon, setOptionPokemon] = useState("all");
+  const [pokemonList, setPokemonList] = useState();
   const trainerName = useSelector((state) => state.trainerName);
   const navigate = useNavigate();
+  // paginacion
+  const [isEmpty, setisEmpty] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pokemonPerPage, setPokemonPerPage] = useState(20);
+  const [isOptionActive, setisOptionActive] = useState();
+  const lastPokemonIndex = currentPage * pokemonPerPage;
+  const firstPokemonIndex = lastPokemonIndex - pokemonPerPage;
+  const pokemonsPag = pokemonsPagination?.results.slice(
+    firstPokemonIndex,
+    lastPokemonIndex
+  );
+
+  // console.log(currentPage);
+  // console.log(pokemonsPag);
 
   useEffect(() => {
     listPokemons();
-    if (optionPokemon !== "ALL") {
+    if (optionPokemon !== "all") {
       const URL = `https://pokeapi.co/api/v2/type/${optionPokemon}/`;
-      axios.get(URL)
+      axios
+        .get(URL)
         .then((res) => {
           const arrTemp = res.data.pokemon.map((e) => e.pokemon);
-          setPokemons({ results: arrTemp });
+          setisOptionActive(true);
+          setPokemonsPagination({ results: arrTemp });
         })
         .catch((err) => console.log(err));
     } else if (pokemonSearch) {
@@ -40,22 +57,27 @@ const Pokedex = () => {
       setPokemons(objTemp);
     } else {
       const URL = "https://pokeapi.co/api/v2/pokemon";
-      axios.get(URL)
-        .then((res) => setPokemons(res.data))
+      axios
+        .get(URL)
+        .then((res) => {
+          setPokemons(res.data);
+          setisOptionActive(false);
+        })
         .catch((err) => console.log(err));
     }
-  }, [pokemonSearch, optionPokemon]);
+    setCurrentPage(pagination);
+  }, [pokemonSearch, optionPokemon, currentPage]);
 
   // Funcion para obtener los tipos de pokemon y listarlos en el select
   const listPokemons = () => {
     const URL = "https://pokeapi.co/api/v2/type";
     axios
       .get(URL)
-      .then((res) => setpokemonList(res.data.results))
+      .then((res) => setPokemonList(res.data.results))
       .catch((err) => console.log(err));
   };
 
-  // Funcion de retroceder de pagina
+  // Funcion de avanzar de pagina
   const paginationNext = () => {
     const URLNext = pokemons?.next;
     if (URLNext !== null) {
@@ -68,9 +90,18 @@ const Pokedex = () => {
         })
         .catch((err) => console.log(err));
     }
+    if (optionPokemon !== "all") {
+      if (pokemonsPag.length !== 0) {
+        setCurrentPage(currentPage + 1); //
+      } else {
+        alert("no hay mas pokemons");
+      }
+    }
   };
 
-  // Funcion de avanzar de pagina
+  // console.log(pokemonsPag);
+
+  // Funcion de retroceder de pagina
   const paginationPrevious = () => {
     const URLPrevious = pokemons?.previous;
     if (URLPrevious !== null) {
@@ -83,6 +114,11 @@ const Pokedex = () => {
         })
         .catch((err) => console.log(err));
     }
+    if (optionPokemon !== "all") {
+      if (currentPage !== 1) {
+        setCurrentPage(currentPage - 1);
+      }
+    }
   };
 
   // Funcion de input
@@ -90,18 +126,31 @@ const Pokedex = () => {
     e.preventDefault();
     setPokemonSearch(e.target.inputSearch.value.trim().toLowerCase());
     e.target.inputSearch.value = "";
-    setOptionPokemon('ALL');
+    setOptionPokemon("all");
+    scrollToTop();
+    setPagination(1);
+    setisOptionActive(false);
   };
 
   // Funcion de select
   const handleChangeSelect = (e) => {
+    setCurrentPage(1);
+    if (optionPokemon !== "all") {
+      setisOptionActive(true);
+    } else {
+      setisOptionActive(false);
+    }
     setOptionPokemon(e.target.value);
-    setPokemonSearch('');
+    setPokemonSearch("");
+    setPagination(1);
+    scrollToTop();
   };
 
   return (
     <section className="pokedex">
-      <button className="pokedex__btn_login" onClick={() => navigate('/')}><i className="fa-solid fa-arrow-left"></i></button>
+      <button className="pokedex__btn_login" onClick={() => navigate("/")}>
+        <i className="fa-solid fa-arrow-left"></i>
+      </button>
       <div className="pokedex__logo">
         <img
           src="https://i.postimg.cc/xdnhfYwx/pokedex-title.png"
@@ -151,9 +200,13 @@ const Pokedex = () => {
         </div>
       </article>
       <article className="pokedex__container">
-        {pokemons?.results.map((pokemon) => (
-          <PokemonCard key={pokemon.url} url={pokemon.url} />
-        ))}
+        {isOptionActive
+          ? pokemonsPag?.map((pokemon) => (
+              <PokemonCard key={pokemon.url} url={pokemon.url} />
+            ))
+          : pokemons?.results.map((pokemon) => (
+              <PokemonCard key={pokemon.url} url={pokemon.url} />
+            ))}
       </article>
     </section>
   );
