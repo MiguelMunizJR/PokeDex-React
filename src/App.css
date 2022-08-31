@@ -648,12 +648,7 @@
   }
 
   .App__pokeball {
-    width: 15rem;
-    height: min-content;
-    top: 8rem;
-    left: 3rem;
-    right: 0rem;
-    bottom: 0;
+    display: none;
   }
 
   .footer {
@@ -672,8 +667,7 @@
     margin-right: auto;
     width: 19rem;
     height: min-content;
-    position: relative;
-    top: -7rem;
+    top: 3rem;
     left: 0;
     right: 0;
     bottom: 1rem;
