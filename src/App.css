@@ -669,12 +669,12 @@
   }
   
   .login__logo {
-    width: 16rem;
+    width: 18rem;
     height: min-content;
     top: 3rem;
-    left: 4rem;
+    left: 3rem;
     right: 0;
-    bottom: 0;
+    bottom: 1rem;
   }
 
   .login__card {
@@ -691,7 +691,7 @@
   }
 
   .login__title {
-    margin-top: 1rem;
+    margin-top: 2rem;
     font-size: 2rem;
   }
 
