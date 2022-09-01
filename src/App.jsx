@@ -8,7 +8,7 @@ import Pokedex from "./components/Pokedex";
 
 function App() {
   return (
-    <div className="App">
+    <div className="App" >
       <header className="App__pokeball">
         <img
           src="https://i.postimg.cc/QxzPDTD0/pokedex-pokeball.png"

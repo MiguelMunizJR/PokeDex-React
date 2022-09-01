@@ -4,15 +4,6 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import PokemonCard from "./PokemonCard.jsx";
 
-// Funcion de scroll al usar la paginacion
-const scrollToTop = () => {
-  const container = document.querySelector(".pokedex__container");
-  container.scrollTo({
-    top: 0,
-    behavior: "smooth",
-  });
-};
-
 const Pokedex = () => {
   const [pokemons, setPokemons] = useState();
   const [pokemonsPagination, setPokemonsPagination] = useState();
@@ -24,42 +15,53 @@ const Pokedex = () => {
   const navigate = useNavigate();
   // paginacion
   const [currentPage, setCurrentPage] = useState(1);
-  const [pokemonPerPage, setPokemonPerPage] = useState(20);
+  const [pokemonPerPage, setPokemonPerPage] = useState(21);
   const [isOptionActive, setisOptionActive] = useState();
 
-  // console.log(currentPage);
-  // console.log(pokemonsPag);
+  // Funcion de scroll al usar la paginacion
+  const scrollToTop = () => {
+    const container = document.querySelector(".pokedex__container");
+    container.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+    if (pagination <= 0) {
+      setPagination(1);
+    }
+  };
 
   useEffect(() => {
     listPokemons();
-    if (optionPokemon !== "all") {
-      const URL = `https://pokeapi.co/api/v2/type/${optionPokemon}/`;
-      axios
-        .get(URL)
-        .then((res) => {
-          const arrTemp = res.data.pokemon.map((e) => e.pokemon);
-          setisOptionActive(true);
-          setPokemonsPagination({ results: arrTemp });
-        })
-        .catch((err) => console.log(err));
-    } else if (pokemonSearch) {
-      const url = `https://pokeapi.co/api/v2/pokemon/${pokemonSearch}`;
-      const objTemp = {
-        results: [{ url }],
-      };
-      setPokemons(objTemp);
-    } else {
-      const URL = "https://pokeapi.co/api/v2/pokemon";
-      axios
-        .get(URL)
-        .then((res) => {
-          setPokemons(res.data);
-          setisOptionActive(false);
-        })
-        .catch((err) => console.log(err));
+    if (pokemonsPag?.length !== 0) {
+      if (optionPokemon !== "all") {
+        const URL = `https://pokeapi.co/api/v2/type/${optionPokemon}/`;
+        axios
+          .get(URL)
+          .then((res) => {
+            const arrTemp = res.data.pokemon.map((e) => e.pokemon);
+            setisOptionActive(true);
+            setPokemonsPagination({ results: arrTemp });
+          })
+          .catch((err) => console.log(err));
+      } else if (pokemonSearch) {
+        const url = `https://pokeapi.co/api/v2/pokemon/${pokemonSearch}`;
+        const objTemp = {
+          results: [{ url }],
+        };
+        setPokemons(objTemp);
+      } else {
+        const URL = "https://pokeapi.co/api/v2/pokemon";
+        axios
+          .get(URL)
+          .then((res) => {
+            setPokemons(res.data);
+            setisOptionActive(false);
+          })
+          .catch((err) => console.log(err));
+      }
     }
     setCurrentPage(pagination);
-  }, [pokemonSearch, optionPokemon]);
+  }, [pokemonSearch, optionPokemon, pagination, currentPage]);
 
   const lastPokemonIndex = currentPage * pokemonPerPage;
   const firstPokemonIndex = lastPokemonIndex - pokemonPerPage;
@@ -77,7 +79,49 @@ const Pokedex = () => {
       .catch((err) => console.log(err));
   };
 
-  console.log(pokemonsPag);
+  // Funcion de retroceder de pagina
+  const paginationPrevious = () => {
+    if (pagination >= 1) {
+      const URLPrevious = pokemons?.previous;
+      if (URLPrevious !== null) {
+        axios
+          .get(URLPrevious)
+          .then((res) => {
+            scrollToTop();
+            setPokemons(res.data);
+            setPagination(pagination - 1);
+          })
+          .catch((err) => console.log(err));
+      }
+      if (optionPokemon !== "all") {
+        if (currentPage !== 1) {
+          setCurrentPage(currentPage - 1);
+          setPagination(pagination - 1);
+        }
+      }
+    }
+  };
+
+  // Funcion de avanzar de pagina
+  const paginationNext = () => {
+    const URLNext = pokemons?.next;
+    if (pokemonsPag?.length !== 0) {
+      if (URLNext !== null) {
+        axios
+          .get(URLNext)
+          .then((res) => {
+            scrollToTop();
+            setPokemons(res.data);
+            setPagination(pagination + 1);
+          })
+          .catch((err) => console.log(err));
+      }
+      if (optionPokemon !== "all") {
+        setCurrentPage(currentPage + 1); //
+        setPagination(pagination + 1);
+      }
+    }
+  };
 
   // Funcion de input
   const handleSubmit = (e) => {
@@ -103,46 +147,6 @@ const Pokedex = () => {
     setPokemonSearch("");
     setPagination(1);
     scrollToTop();
-  };
-
-  // Funcion de retroceder de pagina
-  const paginationPrevious = () => {
-    const URLPrevious = pokemons?.previous;
-    if (URLPrevious !== null) {
-      axios
-        .get(URLPrevious)
-        .then((res) => {
-          setPokemons(res.data);
-          setPagination(pagination - 1);
-          scrollToTop();
-        })
-        .catch((err) => console.log(err));
-    }
-    if (optionPokemon !== "all") {
-      if (currentPage !== 1) {
-        setCurrentPage(currentPage - 1);
-        setPagination(pagination - 1);
-      }
-    }
-  };
-
-  // Funcion de avanzar de pagina
-  const paginationNext = () => {
-    const URLNext = pokemons?.next;
-    if (URLNext !== null) {
-      axios
-        .get(URLNext)
-        .then((res) => {
-          setPokemons(res.data);
-          setPagination(pagination + 1);
-          scrollToTop();
-        })
-        .catch((err) => console.log(err));
-    }
-    if (optionPokemon !== "all") {
-      setCurrentPage(currentPage + 1); //
-      setPagination(pagination + 1);
-    }
   };
 
   return (
@@ -185,6 +189,19 @@ const Pokedex = () => {
             ))}
           </select>
         </div>
+        <div className="pagination__info">
+          <p className="pagination__title">Page:</p>
+          <span className="pagination__page">{pagination}</span>
+        </div>
+      </article>
+      <article className="pokedex__container">
+        {isOptionActive
+          ? pokemonsPag?.map((pokemon) => (
+              <PokemonCard key={pokemon.url} url={pokemon.url} />
+            ))
+          : pokemons?.results.map((pokemon) => (
+              <PokemonCard key={pokemon.url} url={pokemon.url} />
+            ))}
         <div className="filters__pagination">
           <div className="pagination__btn" onClick={paginationPrevious}>
             <i className="fa-solid fa-arrow-left"></i>
@@ -197,15 +214,6 @@ const Pokedex = () => {
             <i className="fa-solid fa-arrow-right"></i>
           </div>
         </div>
-      </article>
-      <article className="pokedex__container">
-        {isOptionActive
-          ? pokemonsPag?.map((pokemon) => (
-              <PokemonCard key={pokemon.url} url={pokemon.url} />
-            ))
-          : pokemons?.results.map((pokemon) => (
-              <PokemonCard key={pokemon.url} url={pokemon.url} />
-            ))}
       </article>
     </section>
   );
