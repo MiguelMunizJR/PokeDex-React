@@ -23,16 +23,9 @@ const Pokedex = () => {
   const trainerName = useSelector((state) => state.trainerName);
   const navigate = useNavigate();
   // paginacion
-  const [isEmpty, setisEmpty] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [pokemonPerPage, setPokemonPerPage] = useState(20);
   const [isOptionActive, setisOptionActive] = useState();
-  const lastPokemonIndex = currentPage * pokemonPerPage;
-  const firstPokemonIndex = lastPokemonIndex - pokemonPerPage;
-  const pokemonsPag = pokemonsPagination?.results.slice(
-    firstPokemonIndex,
-    lastPokemonIndex
-  );
 
   // console.log(currentPage);
   // console.log(pokemonsPag);
@@ -66,7 +59,14 @@ const Pokedex = () => {
         .catch((err) => console.log(err));
     }
     setCurrentPage(pagination);
-  }, [pokemonSearch, optionPokemon, currentPage]);
+  }, [pokemonSearch, optionPokemon]);
+
+  const lastPokemonIndex = currentPage * pokemonPerPage;
+  const firstPokemonIndex = lastPokemonIndex - pokemonPerPage;
+  const pokemonsPag = pokemonsPagination?.results.slice(
+    firstPokemonIndex,
+    lastPokemonIndex
+  );
 
   // Funcion para obtener los tipos de pokemon y listarlos en el select
   const listPokemons = () => {
@@ -77,25 +77,33 @@ const Pokedex = () => {
       .catch((err) => console.log(err));
   };
 
-  // Funcion de avanzar de pagina
-  const paginationNext = () => {
-    const URLNext = pokemons?.next;
-    if (URLNext !== null) {
-      axios
-        .get(URLNext)
-        .then((res) => {
-          setPokemons(res.data);
-          setPagination(pagination + 1);
-          scrollToTop();
-        })
-        .catch((err) => console.log(err));
-    }
-    if (optionPokemon !== "all") {
-        setCurrentPage(currentPage + 1); //
-    }
+  console.log(pokemonsPag);
+
+  // Funcion de input
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setOptionPokemon("all");
+    setisOptionActive(false);
+    setCurrentPage(1);
+    setPagination(1);
+    setPokemonSearch(e.target.inputSearch.value.trim().toLowerCase());
+    e.target.inputSearch.value = "";
+    scrollToTop();
   };
 
-  // console.log(pokemonsPag);
+  // Funcion de select
+  const handleChangeSelect = (e) => {
+    setCurrentPage(1);
+    if (optionPokemon !== "all") {
+      setisOptionActive(true);
+    } else {
+      setisOptionActive(false);
+    }
+    setOptionPokemon(e.target.value);
+    setPokemonSearch("");
+    setPagination(1);
+    scrollToTop();
+  };
 
   // Funcion de retroceder de pagina
   const paginationPrevious = () => {
@@ -113,33 +121,28 @@ const Pokedex = () => {
     if (optionPokemon !== "all") {
       if (currentPage !== 1) {
         setCurrentPage(currentPage - 1);
+        setPagination(pagination - 1);
       }
     }
   };
 
-  // Funcion de input
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setPokemonSearch(e.target.inputSearch.value.trim().toLowerCase());
-    e.target.inputSearch.value = "";
-    setOptionPokemon("all");
-    scrollToTop();
-    setPagination(1);
-    setisOptionActive(false);
-  };
-
-  // Funcion de select
-  const handleChangeSelect = (e) => {
-    setCurrentPage(1);
-    if (optionPokemon !== "all") {
-      setisOptionActive(true);
-    } else {
-      setisOptionActive(false);
+  // Funcion de avanzar de pagina
+  const paginationNext = () => {
+    const URLNext = pokemons?.next;
+    if (URLNext !== null) {
+      axios
+        .get(URLNext)
+        .then((res) => {
+          setPokemons(res.data);
+          setPagination(pagination + 1);
+          scrollToTop();
+        })
+        .catch((err) => console.log(err));
     }
-    setOptionPokemon(e.target.value);
-    setPokemonSearch("");
-    setPagination(1);
-    scrollToTop();
+    if (optionPokemon !== "all") {
+      setCurrentPage(currentPage + 1); //
+      setPagination(pagination + 1);
+    }
   };
 
   return (
