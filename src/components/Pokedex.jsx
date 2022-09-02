@@ -14,8 +14,9 @@ const Pokedex = () => {
   const trainerName = useSelector((state) => state.trainerName);
   const navigate = useNavigate();
   // paginacion
+  const [isEmptyPokemon, setIsEmptyPokemon] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [pokemonPerPage, setPokemonPerPage] = useState(21);
+  const [pokemonPerPage, setPokemonPerPage] = useState(18);
   const [isOptionActive, setisOptionActive] = useState();
 
   // Funcion de scroll al usar la paginacion
@@ -25,43 +26,7 @@ const Pokedex = () => {
       top: 0,
       behavior: "smooth",
     });
-    if (pagination <= 0) {
-      setPagination(1);
-    }
   };
-
-  useEffect(() => {
-    listPokemons();
-    if (pokemonsPag?.length !== 0) {
-      if (optionPokemon !== "all") {
-        const URL = `https://pokeapi.co/api/v2/type/${optionPokemon}/`;
-        axios
-          .get(URL)
-          .then((res) => {
-            const arrTemp = res.data.pokemon.map((e) => e.pokemon);
-            setisOptionActive(true);
-            setPokemonsPagination({ results: arrTemp });
-          })
-          .catch((err) => console.log(err));
-      } else if (pokemonSearch) {
-        const url = `https://pokeapi.co/api/v2/pokemon/${pokemonSearch}`;
-        const objTemp = {
-          results: [{ url }],
-        };
-        setPokemons(objTemp);
-      } else {
-        const URL = "https://pokeapi.co/api/v2/pokemon";
-        axios
-          .get(URL)
-          .then((res) => {
-            setPokemons(res.data);
-            setisOptionActive(false);
-          })
-          .catch((err) => console.log(err));
-      }
-    }
-    setCurrentPage(pagination);
-  }, [pokemonSearch, optionPokemon, pagination, currentPage]);
 
   const lastPokemonIndex = currentPage * pokemonPerPage;
   const firstPokemonIndex = lastPokemonIndex - pokemonPerPage;
@@ -69,6 +34,55 @@ const Pokedex = () => {
     firstPokemonIndex,
     lastPokemonIndex
   );
+
+  // Comprueba si la siguiente pagina esta vacia
+  const lastPokemonIndexEmpty = lastPokemonIndex + pokemonPerPage;
+  const firstPokemonIndexEmpty = lastPokemonIndex;
+  const pokemonsPagEmpty = pokemonsPagination?.results.slice(
+    firstPokemonIndexEmpty,
+    lastPokemonIndexEmpty
+  );
+
+  // Comprueba si la siguiente pagina esta vacia
+  const isEmpty = () => {
+    if (pokemonsPagEmpty?.length < 18) {
+      setIsEmptyPokemon(true);
+    }
+  };
+
+  useEffect(() => {
+    listPokemons();
+    if (optionPokemon !== "all") {
+      const URL = `https://pokeapi.co/api/v2/type/${optionPokemon}/`;
+      axios
+        .get(URL)
+        .then((res) => {
+          const arrTemp = res.data.pokemon.map((e) => e.pokemon);
+          setisOptionActive(true);
+          setPokemonsPagination({ results: arrTemp });
+        })
+        .catch((err) => console.log(err));
+    } else if (pokemonSearch) {
+      const url = `https://pokeapi.co/api/v2/pokemon/${pokemonSearch}`;
+      const objTemp = {
+        results: [{ url }],
+      };
+      setPokemons(objTemp);
+      setPagination(1);
+      setCurrentPage(1);
+    } else {
+      const URL = "https://pokeapi.co/api/v2/pokemon";
+      axios
+        .get(URL)
+        .then((res) => {
+          setPokemons(res.data);
+          setisOptionActive(false);
+          scrollToTop();
+        })
+        .catch((err) => console.log(err));
+    }
+    setCurrentPage(pagination);
+  }, [pokemonSearch, optionPokemon]);
 
   // Funcion para obtener los tipos de pokemon y listarlos en el select
   const listPokemons = () => {
@@ -81,23 +95,26 @@ const Pokedex = () => {
 
   // Funcion de retroceder de pagina
   const paginationPrevious = () => {
-    if (pagination >= 1) {
-      const URLPrevious = pokemons?.previous;
+    const URLPrevious = pokemons?.previous;
+    if (optionPokemon === "all") {
       if (URLPrevious !== null) {
         axios
           .get(URLPrevious)
           .then((res) => {
-            scrollToTop();
             setPokemons(res.data);
             setPagination(pagination - 1);
+            scrollToTop();
           })
           .catch((err) => console.log(err));
       }
-      if (optionPokemon !== "all") {
-        if (currentPage !== 1) {
-          setCurrentPage(currentPage - 1);
-          setPagination(pagination - 1);
-        }
+    } else {
+      if (currentPage > 1) {
+        setCurrentPage(currentPage - 1);
+        setPagination(pagination - 1);
+        scrollToTop();
+      } else {
+        setPagination(1);
+        setCurrentPage(1);
       }
     }
   };
@@ -105,7 +122,7 @@ const Pokedex = () => {
   // Funcion de avanzar de pagina
   const paginationNext = () => {
     const URLNext = pokemons?.next;
-    if (pokemonsPag?.length !== 0) {
+    if (optionPokemon === "all") {
       if (URLNext !== null) {
         axios
           .get(URLNext)
@@ -116,38 +133,49 @@ const Pokedex = () => {
           })
           .catch((err) => console.log(err));
       }
-      if (optionPokemon !== "all") {
+    } else {
+      if (!isEmptyPokemon) {
         setCurrentPage(currentPage + 1); //
         setPagination(pagination + 1);
+        scrollToTop();
       }
     }
+    isEmpty();
   };
 
   // Funcion de input
   const handleSubmit = (e) => {
     e.preventDefault();
-    setOptionPokemon("all");
-    setisOptionActive(false);
     setCurrentPage(1);
     setPagination(1);
+    setOptionPokemon("all");
+    setisOptionActive(false);
     setPokemonSearch(e.target.inputSearch.value.trim().toLowerCase());
     e.target.inputSearch.value = "";
+    setIsEmptyPokemon(false);
     scrollToTop();
   };
 
   // Funcion de select
   const handleChangeSelect = (e) => {
-    setCurrentPage(1);
     if (optionPokemon !== "all") {
       setisOptionActive(true);
+      setPagination(1);
+      setCurrentPage(1);
     } else {
       setisOptionActive(false);
+      setPagination(1);
+      setCurrentPage(1);
     }
     setOptionPokemon(e.target.value);
     setPokemonSearch("");
     setPagination(1);
+    setCurrentPage(1);
+    setIsEmptyPokemon(false);
     scrollToTop();
   };
+
+  // console.log(isEmptyPokemon);
 
   return (
     <section className="pokedex">
