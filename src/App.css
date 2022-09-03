@@ -435,7 +435,7 @@
   width: 100%;
   height: 5rem;
   display: flex;
-  grid-area: 8 / 1 / 8 / 4;
+  grid-area: 6 / 4 / 6 / 2;
   align-items: center;
   justify-content: center;
   text-align: center;
@@ -596,6 +596,7 @@
   font-size: 1rem;
   font-weight: 400;
   color: #fff;
+  text-align: center;
   border-radius: 1rem;
   box-shadow: 2px 2px 4px #111;
 }
@@ -662,7 +663,7 @@
 
 .details__pokemon {
   margin-left: -1rem;
-  width: 62vw;
+  width: 53rem;
   height: 20rem;
   position: relative;
   display: flex;
@@ -736,7 +737,7 @@
 
 .details__info1 {
   margin-left: -1rem;
-  width: 30.6vw;
+  width: 26.20rem;
   height: 8rem;
   position: relative;
   display: flex;
@@ -794,7 +795,7 @@
 
 .details__info2 {
   margin-left: -1rem;
-  width: 30.6vw;
+  width: 26.20rem;
   height: 8rem;
   position: relative;
   display: flex;
@@ -830,6 +831,7 @@
   width: 90%;
   display: flex;
   justify-content: space-around;
+  text-align: center;
 }
 
 .details__abilities_value {
@@ -879,6 +881,9 @@
 
 .details__moves_item {
   padding: 0.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 1rem;
   font-weight: 400;
   border-bottom: 0.1rem solid #1111112d;
@@ -906,10 +911,22 @@
 /* MEDIAQUERIES */
 @media screen and (min-width: 2300px) {
   .pokedex__container {
+    height: 50vh;
     grid-template-columns: repeat(4, 1fr);
   }
+
+  .pokedex__filters {
+    padding: 0.5rem 1rem;
+    width: 40vw;
+  }
+
+  .details {
+    width: 70vw;
+  }
 }
-@media screen and (min-width: 1800px) {
+
+@media screen and (min-width: 1750px) and (max-width: 2300px) {
+
   .login__logo {
     margin-left: auto;
     margin-right: auto;
@@ -918,31 +935,38 @@
     right: 0;
     top: -10rem;
   }
-
-  .pokedex__filters {
-    padding: 0.5rem 1rem;
-    width: 40vw;
-  }
+  
   .pokedex__container {
     width: 68vw;
     height: 50vh;
   }
+
+  .pokedex__filters {
+    padding: 0.5rem 1rem;
+    width: 50vw;
+  }
+
+  .filters__pagination {
+    grid-area: 7 / 2;
+  }
 }
 
-@media screen and (min-width: 1350px) {
-}
-
-@media screen and (max-width: 1350px) {
+@media screen and (max-width: 1750px) {
   .pokedex__filters {
     padding: 0.5rem 1rem;
   }
 
   .pokedex__container {
     grid-template-columns: repeat(2, 1fr);
+    
   }
 
   .pokemon__card {
     width: 28rem;
+  }
+
+  .filters__pagination {
+    grid-area: 10 / 1 / 10 / 3 ;
   }
 }
 
@@ -952,12 +976,47 @@
     flex-direction: column;
   }
 
+  .select__title {
+    margin-top: .5rem;
+  }
+
   .pokedex__container {
     grid-template-columns: repeat(2, 1fr);
   }
 
   .pokemon__card {
     width: 22rem;
+  }
+
+  .details__pokemon {
+    height: 30rem;
+  }
+
+  .details__pokemon_list {
+    flex-wrap: wrap;
+  }
+
+  .details__moves {
+    margin-right: -1rem;
+    height: 46rem;
+    width: 18rem;
+  }
+
+  .details__info1 {
+    height: 14rem;
+    justify-content: space-evenly;
+  }
+
+  .details__info2 {
+    height: 14rem;
+    justify-content: center;
+  }
+
+  .details__abilities_div {
+    width: fit-content;
+    height: 100%;
+    flex-direction: column;
+    flex-wrap: wrap;
   }
 }
 
@@ -970,8 +1029,17 @@
     grid-template-columns: 1fr;
   }
 
+  .filters__pagination {
+    grid-area: 19;
+  }
+
   .pokemon__card {
     width: 70vw;
+  }
+
+  .details__moves_item {
+    height: 2rem;
+    font-size: .9rem;
   }
 }
 
@@ -982,11 +1050,16 @@
   }
 
   .pokedex__logo {
+    width: 20rem;
     margin-top: 5rem;
+  }
+  
+  .pokedex__welcome {
+    font-size: 1rem;
   }
 
   .pokedex__filters {
-    width: 90vw;
+    width: 80vw;
     border-radius: 0;
   }
 
@@ -996,14 +1069,71 @@
   }
 
   .pokedex__container {
-    width: 90vw;
+    width: 80vw;
     height: 20rem;
     border-radius: 0;
   }
 
   .pokemon__card {
-    width: 90vw;
+    width: 18rem;
   }
+
+  .pokemon__img img{
+    width: 7rem;
+  }
+
+  .pokemon__item_types {
+    width: 3rem;
+    font-size: .8rem;
+  }
+
+  .filters__pagination {
+    width: 15rem;
+  }
+}
+
+@media screen and (max-width: 400px) {
+
+  .pokedex__logo {
+    width: 17rem;
+    margin-top: 3rem;
+  }
+
+  .pokemon__card {
+    min-height: 10rem;
+  }
+
+  .pokemon__img img {
+    margin: 0;
+    width: 5.5rem;
+  }
+
+  .pokedex__filters input {
+    width: 15rem;
+    height: 2rem;
+  }
+
+  .pokedex__filters button {
+    width: 2.2rem;
+    height: 2.2rem;
+  }
+
+  .pokedex__filters select {
+    width: 8rem;
+  }
+
+  .pokemon__card {
+    width: fit-content;
+  }
+
+  .pokemon__info {
+    width: auto;
+  }
+
+  .details__pokemon {
+    width: 60vw;
+  }
+  
 }
 
 /* BGN Dynamic */
