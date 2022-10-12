@@ -80,6 +80,8 @@ const Pokedex = () => {
           scrollToTop();
         })
         .catch((err) => console.log(err));
+      const paginationBar = document.querySelector(".filters__pagination");
+      paginationBar.style.display = "flex";
     }
     setCurrentPage(pagination);
   }, [pokemonSearch, optionPokemon]);
@@ -146,6 +148,8 @@ const Pokedex = () => {
   // Funcion de input
   const handleSubmit = (e) => {
     e.preventDefault();
+    const paginationBar = document.querySelector(".filters__pagination");
+    paginationBar.style.display = "none";
     setCurrentPage(1);
     setPagination(1);
     setOptionPokemon("all");
@@ -173,6 +177,8 @@ const Pokedex = () => {
     setCurrentPage(1);
     setIsEmptyPokemon(false);
     scrollToTop();
+    const paginationBar = document.querySelector(".filters__pagination");
+    paginationBar.style.display = "flex";
   };
 
   // console.log(isEmptyPokemon);

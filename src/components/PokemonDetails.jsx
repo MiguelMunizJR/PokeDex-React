@@ -92,7 +92,6 @@ const PokemonDetails = () => {
             </div>
           </article>
         </article>
-      </article>
       <aside className="details__moves">
         <h2 className="details__moves_title">MOVES: </h2>
         <div className="details__moves_container">
@@ -103,6 +102,7 @@ const PokemonDetails = () => {
           </ul>
         </div>
       </aside>
+      </article>
     </section>
   );
 };
